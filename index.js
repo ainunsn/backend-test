@@ -29,8 +29,9 @@ async function main() {
     app.use('/api-docs-sum', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
     // listen on port
-    app.listen(6000, () =>
-      console.log("Server running at http://localhost:6000")
+    const PORT = 3000;
+    app.listen(PORT, () =>
+      console.log(`Server running at http://localhost:${PORT}`)
     );
   } catch (error) {
     console.error("Unable to connect to the database:", error);
@@ -38,3 +39,4 @@ async function main() {
 }
 
 main();
+
