@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize');
-const db = require('../config/database');
+const Sequelize = require("sequelize");
+const db = require("../config/database");
 
 const { DataTypes } = Sequelize;
 
@@ -10,16 +10,19 @@ const Users = db.define(
     username: {
       type: DataTypes.STRING,
     },
-    password: {
+    user_password: {
       type: DataTypes.STRING,
     },
-    name: {
+    full_name: {
       type: DataTypes.STRING,
     },
     email: {
       type: DataTypes.STRING,
     },
-    referal_code: {
+    user_referal_code: {
+      type: DataTypes.STRING,
+    },
+    user_friend_referal_code: {
       type: DataTypes.STRING,
     },
   },
@@ -31,4 +34,4 @@ const Users = db.define(
   }
 );
 
-module.exports =  Users;
+module.exports = Users;

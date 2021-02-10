@@ -8,12 +8,14 @@ const {
   compareToken,
 } = require("../utilities/token_generator");
 
+const { Op } = require("sequelize");
+
 const saltsRound = 10;
 
 // Create user
 const createUser = async (req, res) => {
   try {
-    const { email, password, username, referal_code, name } = req.body;
+    const { email, password, username, name, referal_code } = req.body;
 
     let validEmail = ValidateEmail(email);
 
@@ -22,14 +24,25 @@ const createUser = async (req, res) => {
         username: username,
       },
     });
-
     const emailCheck = await Users.findAll({
       where: {
         email: email,
       },
     });
 
-    if (!usernameCheck.length && !emailCheck.length && validEmail) {
+    const checkRefCode = await Users.findAll({});
+    const validRefCode = checkRefCode
+      .map((i) => i.dataValues.user_referal_code)
+      .filter((code) => code === referal_code).length
+      ? true
+      : false;
+
+    if (
+      !usernameCheck.length &&
+      !emailCheck.length &&
+      validEmail &&
+      validRefCode
+    ) {
       let new_referal_code = randomString(6);
       const salts = await bcrypt.genSalt(saltsRound);
       const hashPass = await bcrypt.hash(password.toString(), salts);
@@ -37,9 +50,10 @@ const createUser = async (req, res) => {
       const userData = {
         email: email,
         username: username,
-        password: hashPass,
-        referal_code: new_referal_code,
-        name: name,
+        user_password: hashPass,
+        user_referal_code: new_referal_code,
+        full_name: name,
+        user_friend_referal_code: referal_code,
       };
       await Users.create(userData);
       res.sendStatus(200);
@@ -47,6 +61,7 @@ const createUser = async (req, res) => {
       res.status(400).json("Invalid field information");
     }
   } catch (err) {
+    console.log(err);
     res.sendStatus(500);
   }
 };
@@ -54,28 +69,29 @@ const createUser = async (req, res) => {
 // Login
 const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
     const user = await Users.findAll({
       where: {
-        email: email,
+        email: req.body.email,
       },
     });
 
     if (user.length) {
       const userData = user[0].dataValues;
-      const validPass = await bcrypt.compare(password, userData.password);
+      const validPass = await bcrypt.compare(
+        req.body.password,
+        userData.user_password
+      );
 
       if (validPass) {
         const response = {
           id: userData.id,
           username: userData.username,
           email: userData.email,
-          referal_code: userData.referal_code,
+          referal_code: userData.user_referal_code,
           token: tokenGenerator(userData.id),
         };
 
         res.json(response);
-        loginUser();
       } else {
         res.json("Invalid Password");
       }
@@ -83,8 +99,7 @@ const loginUser = async (req, res) => {
       res.json("No user");
     }
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    res.json("Internal Server Error");
   }
 };
 
@@ -123,27 +138,73 @@ const updateUser = async (req, res) => {
   }
 };
 
-// Get product berdasarkan id
 const getUserByName = async (req, res) => {
   try {
-    const user = await Users.findAll({
-      where: sequelize.where(
-        sequelize.fn("lower", sequelize.col("name")),
-        sequelize.fn("lower", req.query.name)
-      ),
+    const users = await Users.findAll({});
+    const listUser = users.map((i) => {
+      const data = {
+        username: i.dataValues.username,
+        full_name: i.dataValues.full_name,
+        referal_code: i.dataValues.user_referal_code,
+      };
+      return data;
     });
 
-    const listUser = user.map((item) => ({
-      id: item.id,
-      username: item.username,
-      email: item.username,
-      referal_code: item.referal_code,
-      name: item.name,
-    }));
+    const filteredUser = listUser.filter((user) =>
+      user.full_name.toLowerCase().includes(req.query.name)
+    );
 
-    res.json(listUser);
+    res.json(filteredUser);
   } catch (err) {
-    console.log(err);
+    res.sendStatus(500);
+  }
+};
+
+const RefCode = async (req, res) => {
+  try {
+    const { referal_code, token } = req.body;
+
+    const id = compareToken(token);
+
+    if (!id) {
+      res.json("Unauthorize");
+    } else {
+      const userReferal = await Users.findOne({
+        where: { id },
+      });
+
+      const listReferal = await Users.findAll({
+        where: {
+          user_referal_code: {
+            [Op.ne]: userReferal.dataValues.user_referal_code,
+          },
+        },
+      });
+
+      const ref = listReferal
+        .map((i) => i.user_referal_code)
+        .filter((code) => code === referal_code).length
+        ? true
+        : false;
+      console.log(ref);
+
+      if (ref) {
+        await Users.update(
+          { user_friend_referal_code: referal_code },
+          {
+            where: {
+              id: id,
+            },
+          }
+        );
+
+        res.json("Correct");
+      } else {
+        res.json("Invalid information");
+      }
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -152,4 +213,5 @@ module.exports = {
   loginUser,
   updateUser,
   getUserByName,
+  RefCode,
 };

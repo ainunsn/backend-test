@@ -1,5 +1,5 @@
 const express = require('express');
-const {createUser, loginUser, updateUser, getUserByName} = require('../controllers/Users');
+const {createUser, loginUser, updateUser, getUserByName, RefCode} = require('../controllers/Users');
 const getHero = require('../controllers/Hero');
 
 const router = express.Router();
@@ -8,7 +8,8 @@ const router = express.Router();
 router.post('/users', createUser);
 router.post('/login', loginUser);
 router.put('/users', updateUser);
-router.get('/users', getUserByName)
+router.get('/users', getUserByName);
+router.put('/ref-code', RefCode)
 
 
 // Hero

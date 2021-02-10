@@ -1,0 +1,143 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "API Doc",
+        "description": "Registration API Documentation",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:5000"
+        }
+    ],
+    "tags": [
+        {
+            "name": "POST",
+            "description": "POST tag description example"
+        }
+    ],
+    "paths": {
+        "/users": {
+            "post": {
+                "description": "Register user",
+                "tags": [
+                    "POST"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/body"
+                            },
+                            "examples": {
+                                "Body Request": {
+                                    "value": {
+                                        "email": "test@gmail.com",
+                                        "password": "12345",
+                                        "referal_code": "",
+                                        "name": "Test",
+                                        "username": "test"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sukses",
+                        "content": {
+                            "application/json; charset=utf-8": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/response"
+                                },
+                                "examples": {
+                                    "response": {
+                                        "value": {
+                                            "message": "ok"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "examples": {
+                            "response": {
+                                "value": {
+                                    "message": "Invalid field information"
+                                }
+                            }
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "http://localhost:5000"
+                    }
+                ]
+            },
+            "get": {
+                "description": "Get User By Name",
+                "tags": [
+                    "GET"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/body"
+                            },
+                            "examples": {
+                                "Body Request": {
+                                    "value": {
+                                        "email": "test@gmail.com",
+                                        "password": "12345"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "servers": [
+                {
+                    "url": "http://localhost:5000"
+                }
+            ]
+        }
+    },
+    "components": {
+        "schemas": {
+            "body": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "referal_code": {
+                        "type": "string"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "response": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
