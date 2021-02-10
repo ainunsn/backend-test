@@ -1,8 +1,6 @@
 const express = require("express");
 const db = require("./config/database");
 const Router = require("./routes/routes");
-const swaggerUi = require('swagger-ui-express');
-const swaggerDoc = require ('./swagger.json');
 
 const app = express();
 app.use(express.json());
@@ -26,7 +24,6 @@ async function main() {
 
     // use router
     app.use(Router);
-    app.use('/api-docs-sum', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
     // listen on port
     const PORT = 3000;

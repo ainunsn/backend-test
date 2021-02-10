@@ -1,26 +1,17 @@
 # Getting Started with the API
 
 
-## Setup NodeJS for in Docker
-on Command Prompt please run
-`docker build -t backend-test .`
-`docker run -p 3000:3000 -d backend-test`
 
 
-API documentation available here: https://documenter.getpostman.com/view/9400606/TW77fNTD
+## Setup PosgreSQL Database
+open Command Prompt and run
+`psql -U postgres`
 
-## Setup PosgreSQL in Docker
-open Command Prompt
-run postgresql for Docker in Command Prompt `docker run --name pg-docker --rm -p 5000:5432 -e POSTGRES_PASSWORD={YOUR_PASSWORD_FOR_POSGREST_DOCKER} -e POSTGRES_USER={YOUR_USERNAME_FOR_POSTGRES_DOCKER} -d postgres`
-
-then run `psql -h localhost -p 5000 -U {YOUR_USERNAME_FOR_POSTGRES_DOCKER} postgres` on cmd
-enter `{YOUR_PASSWORD_FOR_POSGREST_DOCKER}`
-
-run
-1. CREATE DATABASE "backend-test";
-2. \c backend-test
-3. CREATE TABLE users
-(
+enter password: `{YOUR_PASSWORD}`
+ 1. Create database using `CREATE DATABASE "backend-test";`
+ 2. Log into backend-test database use `\c`
+ 3. Create table users using this command
+    `CREATE TABLE users(
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
     full_name VARCHAR(255) NOT NULL,
@@ -28,8 +19,18 @@ run
     user_referal_code VARCHAR(255),
     user_password VARCHAR(255),
     user_friend_referal_code VARCHAR(255) DEFAULT NULL
+);`
 
-);
+
+
+## Setup NodeJS
+on Command Prompt please run
+ 1. Clone this repository
+ 2. run command `yarn install` to install all dependencies
+ 3. run command `yarn start` to start server
+
+
+API documentation available here: https://documenter.getpostman.com/view/9400606/TW77fNTD
 
 
 

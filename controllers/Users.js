@@ -31,11 +31,14 @@ const createUser = async (req, res) => {
     });
 
     const checkRefCode = await Users.findAll({});
-    const validRefCode = checkRefCode
-      .map((i) => i.dataValues.user_referal_code)
-      .filter((code) => code === referal_code).length
-      ? true
-      : false;
+
+    const validRefCode = referal_code.length
+      ? checkRefCode
+          .map((i) => i.dataValues.user_referal_code)
+          .filter((code) => code === referal_code).length
+        ? true
+        : false
+      : true;
 
     if (
       !usernameCheck.length &&
@@ -109,6 +112,7 @@ const updateUser = async (req, res) => {
     const { email, password, name, username, token } = req.body;
 
     const id = compareToken(token);
+    console.log(id)
 
     if (!id) {
       res.json("Unauthorize");

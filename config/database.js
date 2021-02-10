@@ -1,10 +1,6 @@
 const Sequelize = require('sequelize')
 
-const db = new Sequelize("backend-test", "postgres", "postgres", {
-  host: "localhost",
-  port: 5000,
-  dialect: "postgres",
-});
+const db = new Sequelize("postgres://postgres:admin@localhost:5432/backend-test");
 
 
 module.exports = db;

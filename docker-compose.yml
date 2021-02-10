@@ -1,0 +1,23 @@
+version: "3"
+services:
+  api_dev:
+    build: ./
+    command: sh -c "yarn install && yarn start"
+    ports:
+      - 3000:3000
+    working_dir: /home/app/api
+    volumes:
+      - ./api:/home/app/api
+    depends_on:
+      - db
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=backend-test
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - ./db/data/postgres:/var/lib/postgresql/data  
+    ports:
+      - 5400:5432
