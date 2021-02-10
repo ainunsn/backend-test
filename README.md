@@ -1,12 +1,9 @@
 # Getting Started with the API
 
 
-
-
 ## Setup PosgreSQL Database
 open Command Prompt and run
 `psql -U postgres`
-
 enter password: `{YOUR_PASSWORD}`
  1. Create database using `CREATE DATABASE "backend-test";`
  2. Log into backend-test database use `\c`
