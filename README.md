@@ -13,8 +13,13 @@ API documentation available here: https://documenter.getpostman.com/view/9400606
 open Command Prompt
 run postgresql for Docker in Command Prompt `docker run --name pg-docker --rm -p 5000:5432 -e POSTGRES_PASSWORD={YOUR_PASSWORD_FOR_POSGREST_DOCKER} -e POSTGRES_USER={YOUR_USERNAME_FOR_POSTGRES_DOCKER} -d postgres`
 
-then run `psql -h localhost -p 5000 -U {YOUR_USERNAME_FOR_POSTGRES_DOCKER} postgres` on cmd
-enter `{YOUR_PASSWORD_FOR_POSGREST_DOCKER}`
+
+
+then run `psql -h localhost -p 5000 -U {YOUR_USERNAME_FOR_POSTGRES_DOCKER} postgres` 
+
+on cmd enter `{YOUR_PASSWORD_FOR_POSGREST_DOCKER}`
+
+
 
 run
 1. CREATE DATABASE "backend-test";
